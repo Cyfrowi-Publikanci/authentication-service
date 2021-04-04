@@ -1,0 +1,8 @@
+FROM node:14-alpine
+EXPOSE 3002
+WORKDIR /app
+RUN npm install -g @nestjs/cli
+ENV NODE_ENV=development
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
+COPY . .

@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package authentication;
+
+
+service UsersService {
+  rpc getAllUsers(EmptyPayload) returns (GetAllUsersResponse) {}
+}
+
+message EmptyPayload {}
+
+message GetAllUsersResponse {
+  string email = 1;
+}
