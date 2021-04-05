@@ -14,19 +14,19 @@
 * Package manager yarn
 * @nestjs/cli
 
-### Clone repository
+### Clone repository:
 
 ```bash
-https://github.com/Cyfrowi-Publikanci/authentication-service.git
+git clone https://github.com/Cyfrowi-Publikanci/authentication-service.git
 ```
 
-### Install nest cli
+### Install nest cli:
 
 ```bash
 npm i -g @nestjs/cli
 ```
 
-### Create required env files
+### Create required env files:
 
 ```bash
 cp .env.example .env.compose
@@ -49,7 +49,7 @@ In file .env and .env.compose add missing values.
 yarn install
 ```
 
-### Running the app
+### Running the app:
 
 ```bash
 # development
