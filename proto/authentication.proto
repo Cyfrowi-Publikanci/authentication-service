@@ -7,8 +7,31 @@ service UsersService {
   rpc getAllUsers(EmptyPayload) returns (GetAllUsersResponse) {}
 }
 
+service AuthService {
+  rpc loginByEmail(LoginByEmailPayload) returns (LoginByEmailResponse) {}
+  rpc registerByEmail(RegisterByEmailPayload) returns (RegisterByEmailResponse) {}
+}
+
 message EmptyPayload {}
 
 message GetAllUsersResponse {
   string email = 1;
+}
+
+message LoginByEmailPayload {
+  string email = 1;
+  string password = 2;
+}
+
+message LoginByEmailResponse {
+  string token = 1;
+}
+
+message RegisterByEmailPayload {
+  string email = 1;
+  string password = 2;
+}
+
+message RegisterByEmailResponse {
+  string status = 1;
 }
