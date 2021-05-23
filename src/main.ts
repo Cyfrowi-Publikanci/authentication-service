@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, RpcException, Transport } from '@nestjs/microservices';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import * as path from 'path';
 import { status as GrpcStatus } from 'grpc';
 
@@ -8,7 +8,20 @@ import { AppModule } from './app.module';
 import { config } from '@app/config/config.service';
 
 async function bootstrap() {
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
+  const app = await NestFactory.create(AppModule);
+
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.RMQ,
+    options: {
+      urls: [`amqp://${config().rabbitMQ.name}:${config().rabbitMQ.port}`],
+      queue: 'cats_queue',
+      queueOptions: {
+        durable: false
+      },
+    },
+  });
+
+  app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.GRPC,
     options: {
       package: ['envoy.service.auth.v3', 'authentication'],
@@ -23,6 +36,7 @@ async function bootstrap() {
     }
   });
 
+
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -34,7 +48,11 @@ async function bootstrap() {
         })
     })
   );
-    
-  app.listen(() => console.log(`Microservice ${config().serviceHostname} is listening on port ${config().servicePort}`));
+  
+  try {
+    await app.startAllMicroservicesAsync();
+  } catch (error) {
+    Logger.error(error.stack);
+  }
 }
 bootstrap();

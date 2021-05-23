@@ -1,5 +1,5 @@
-import { Body, Controller } from '@nestjs/common';
-import { GrpcMethod, RpcException } from '@nestjs/microservices';
+import { Body, Controller, Inject } from '@nestjs/common';
+import { ClientProxy, GrpcMethod } from '@nestjs/microservices';
 
 import { AuthServiceController, LoginByEmailResponse, RegisterByEmailResponse } from 'types/authentication';
 import { RegisterUserDto } from 'src/dto/register-user';
@@ -10,7 +10,8 @@ import { LoginDto } from 'src/dto/login';
 export class AuthController implements AuthServiceController {
   
   constructor(
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    @Inject('RMQ') private readonly rmqClient: ClientProxy
   ){}
   
   @GrpcMethod('AuthService', 'loginByEmail')
@@ -28,7 +29,12 @@ export class AuthController implements AuthServiceController {
   async registerByEmail(@Body() registerUserDto: RegisterUserDto): Promise<RegisterByEmailResponse> {
     const { email, password } = registerUserDto;
     
-    await this.authService.createAccount(email, password);
+    const user = await this.authService.createAccount(email, password);
+
+    this.rmqClient.emit('createUser', JSON.stringify({
+      id: user.id,
+      email: user.email
+    }));
     
     return {
       status: 'OK'
