@@ -12,6 +12,10 @@ export const config = () => ({
     jwtExpiresInSeconds: process.env.JWT_EXPIRES_IN_SECONDS,
     jwtSalt: process.env.JWT_SALT,
     jwtSaltRounds: process.env.JWT_SALT_ROUNDS,
+  },
+  rabbitMQ: {
+    name: process.env.RABBIT_MQ_NAME,
+    port: process.env.RABBIT_MQ_PORT
   }
 });
 

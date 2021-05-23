@@ -1,17 +1,31 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { User, UserSchema } from 'src/schemas/user.schema';
 import { SessionModule } from 'src/session/session.module';
-import { ConfigModule } from '@app/config';
+import { config, ConfigModule } from '@app/config';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     SessionModule,
-    ConfigModule
+    ConfigModule,
+    ClientsModule.register([
+      {
+        name: 'RMQ',
+        transport: Transport.RMQ,
+        options: {
+          urls: [`amqp://${config().rabbitMQ.name}:${config().rabbitMQ.port}`],
+          queue: 'cats_queue',
+          queueOptions: {
+            durable: false
+          },
+        },
+      },
+    ]),
   ],
   providers: [AuthService],
   controllers: [AuthController]
