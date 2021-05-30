@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule as NestConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { LoggerModule } from 'nestjs-pino';
 
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
@@ -9,6 +10,7 @@ import { ConfigModule, ConfigService } from '@app/config';
 
 @Module({
   imports: [
+    LoggerModule.forRoot(),
     NestConfigModule.forRoot({
       isGlobal: true
     }),

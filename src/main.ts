@@ -8,7 +8,11 @@ import { AppModule } from './app.module';
 import { config } from '@app/config/config.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: false,
+  });
+
+  const logger = app.get(Logger);
 
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,
@@ -49,6 +53,8 @@ async function bootstrap() {
     })
   );
   
+  app.useLogger(logger);
+
   try {
     await app.startAllMicroservicesAsync();
   } catch (error) {
