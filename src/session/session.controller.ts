@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 
-import { InvalidToken } from 'src/errors/invalid-token';
+import { InvalidToken } from '../errors/invalid-token';
 import { AuthorizationController, CheckRequest, CheckResponse } from 'types/envoy/service/auth/v3/external_auth';
 import { SessionService } from './session.service';
 

@@ -2,11 +2,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 
-import { User, UserDocument } from 'src/schemas/user.schema';
-import { InvalidToken } from 'src/errors/invalid-token';
-import { LackOfSession } from 'src/errors/lack-of-session';
+import { User, UserDocument } from '../schemas/user.schema';
+import { InvalidToken } from '../errors/invalid-token';
+import { LackOfSession } from '../errors/lack-of-session';
 import { ConfigService } from '@app/config';
-import { Session, SessionDocument } from 'src/schemas/session.schema';
+import { Session, SessionDocument } from '../schemas/session.schema';
 
 export class SessionService {
   constructor(

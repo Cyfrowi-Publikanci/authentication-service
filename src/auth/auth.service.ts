@@ -3,12 +3,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
-import { UserAlreadyExist } from 'src/errors/user-already-exist';
-import { UserNotPresent } from 'src/errors/user-not-present';
-import { User, UserDocument } from 'src/schemas/user.schema';
-import { SessionService } from 'src/session/session.service';
+import { UserAlreadyExist } from '../errors/user-already-exist';
+import { UserNotPresent } from '../errors/user-not-present';
+import { User, UserDocument } from '../schemas/user.schema';
+import { SessionService } from '../session/session.service';
 import { ConfigService } from '@app/config';
-import { IncorrectPassword } from 'src/errors/incorrect-password';
+import { IncorrectPassword } from '../errors/incorrect-password';
 
 @Injectable()
 export class AuthService {

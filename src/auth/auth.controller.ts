@@ -3,13 +3,12 @@ import { ClientProxy, GrpcMethod } from '@nestjs/microservices';
 import { Logger } from 'nestjs-pino';
 
 import { AuthServiceController, LoginByEmailResponse, RegisterByEmailResponse } from 'types/authentication';
-import { RegisterUserDto } from 'src/dto/register-user';
+import { RegisterUserDto } from '../dto/register-user';
 import { AuthService } from './auth.service';
-import { LoginDto } from 'src/dto/login';
+import { LoginDto } from '../dto/login';
 
 @Controller()
 export class AuthController implements AuthServiceController {
-  
   constructor(
     private readonly authService: AuthService,
     private readonly logger: Logger,
