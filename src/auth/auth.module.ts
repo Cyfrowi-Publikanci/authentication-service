@@ -4,8 +4,8 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { User, UserSchema } from 'src/schemas/user.schema';
-import { SessionModule } from 'src/session/session.module';
+import { User, UserSchema } from '../schemas/user.schema';
+import { SessionModule } from '../session/session.module';
 import { config, ConfigModule } from '@app/config';
 
 @Module({
