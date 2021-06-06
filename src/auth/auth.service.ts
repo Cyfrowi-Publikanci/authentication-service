@@ -51,7 +51,6 @@ export class AuthService {
   async loginByGoogle(payload: LoginByGooglePayload): Promise<string> {
     const { token } = payload;
     const googleUser = await this.getUserFromSocial(token);
-    console.log(googleUser)
     if (!googleUser.email) throw new LoginFailed();
 
     let user = await this.userModel.findOne({ 'googleId': googleUser.googleId });
