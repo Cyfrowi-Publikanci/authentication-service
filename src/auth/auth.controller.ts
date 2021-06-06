@@ -2,7 +2,7 @@ import { Body, Controller, Inject } from '@nestjs/common';
 import { ClientProxy, GrpcMethod } from '@nestjs/microservices';
 import { Logger } from 'nestjs-pino';
 
-import { AuthServiceController, LoginByEmailResponse, RegisterByEmailResponse } from 'types/authentication';
+import { AuthServiceController, LoginByEmailResponse, LoginByGooglePayload, LoginByGoogleResponse, RegisterByEmailResponse } from 'types/authentication';
 import { RegisterUserDto } from '../dto/register-user';
 import { AuthService } from './auth.service';
 import { LoginDto } from '../dto/login';
@@ -14,7 +14,7 @@ export class AuthController implements AuthServiceController {
     private readonly logger: Logger,
     @Inject('RMQ') private readonly rmqClient: ClientProxy
   ){}
-  
+
   @GrpcMethod('AuthService', 'loginByEmail')
   async loginByEmail(@Body() loginDto: LoginDto): Promise<LoginByEmailResponse> {
     const { email, password } = loginDto;
@@ -37,9 +37,18 @@ export class AuthController implements AuthServiceController {
     }));
 
     this.logger.log('New user was created');
-    
     return {
       status: 'OK'
+    }
+  }
+
+
+  @GrpcMethod('AuthService', 'loginByGoogle')
+  async loginByGoogle(payload: LoginByGooglePayload): Promise<LoginByGoogleResponse> {
+
+    const token = await this.authService.loginByGoogle(payload);
+    return {
+      token
     }
   }
 }

@@ -10,6 +10,7 @@ service UsersService {
 service AuthService {
   rpc loginByEmail(LoginByEmailPayload) returns (LoginByEmailResponse) {}
   rpc registerByEmail(RegisterByEmailPayload) returns (RegisterByEmailResponse) {}
+  rpc loginByGoogle (LoginByGooglePayload) returns (LoginByGoogleResponse) {}
 }
 
 message EmptyPayload {}
@@ -34,4 +35,12 @@ message RegisterByEmailPayload {
 
 message RegisterByEmailResponse {
   string status = 1;
+}
+
+message LoginByGooglePayload {
+  string token = 1;
+}
+
+message LoginByGoogleResponse {
+  string token = 1;
 }

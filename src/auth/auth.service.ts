@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt';
-import { Injectable } from '@nestjs/common';
+import { HttpService, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -9,14 +9,17 @@ import { User, UserDocument } from '../schemas/user.schema';
 import { SessionService } from '../session/session.service';
 import { ConfigService } from '@app/config';
 import { IncorrectPassword } from '../errors/incorrect-password';
+import { LoginByGooglePayload } from 'types/authentication';
+import { GooglePayload } from './types';
+import { LoginFailed } from '../errors/login-failed';
 
 @Injectable()
 export class AuthService {
-
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     private readonly sessionService: SessionService,
     private readonly config: ConfigService,
+    private readonly httpService: HttpService,
   ) {}
 
   async login(email: string, password: string): Promise<string> {
@@ -40,8 +43,34 @@ export class AuthService {
     if (maybeUser) throw new UserAlreadyExist();
 
     const passwordHash = await bcrypt.hash(password, salt);
-    const newUser = this.userModel.create({ email, password: passwordHash });
+    const newUser = await this.userModel.create({ email, password: passwordHash });
 
     return newUser;
+  }
+
+  async loginByGoogle(payload: LoginByGooglePayload): Promise<string> {
+    const { token } = payload;
+    const googleUser = await this.getUserFromSocial(token);
+    console.log(googleUser)
+    if (!googleUser.email) throw new LoginFailed();
+
+    let user = await this.userModel.findOne({ 'googleId': googleUser.googleId });
+
+    if (!user) {
+      user = await this.userModel.create(googleUser);
+    }
+
+    const authToken = await this.sessionService.create(user.id);
+
+    return authToken;
+  }
+
+  private async getUserFromSocial(token: string): Promise<User> {
+    try {
+      const { data: user } = await this.httpService.get(`https://oauth2.googleapis.com/tokeninfo?id_token=${token}`).toPromise();
+      return GooglePayload.toUser(user);
+    } catch (error) {
+      throw new LoginFailed();
+    }
   }
 }
