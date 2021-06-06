@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { HttpModule, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
@@ -13,6 +13,7 @@ import { config, ConfigModule } from '@app/config';
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     SessionModule,
     ConfigModule,
+    HttpModule,
     ClientsModule.register([
       {
         name: 'RMQ',

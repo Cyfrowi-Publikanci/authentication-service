@@ -31,6 +31,14 @@ export interface RegisterByEmailResponse {
   status: string;
 }
 
+export interface LoginByGooglePayload {
+  token: string;
+}
+
+export interface LoginByGoogleResponse {
+  token: string;
+}
+
 export const AUTHENTICATION_PACKAGE_NAME = 'authentication';
 
 export interface UsersServiceClient {
@@ -91,6 +99,11 @@ export interface AuthServiceClient {
     request: RegisterByEmailPayload,
     metadata?: Metadata,
   ): Observable<RegisterByEmailResponse>;
+
+  loginByGoogle(
+    request: LoginByGooglePayload,
+    metadata?: Metadata,
+  ): Observable<LoginByGoogleResponse>;
 }
 
 export interface AuthServiceController {
@@ -109,11 +122,23 @@ export interface AuthServiceController {
     | Promise<RegisterByEmailResponse>
     | Observable<RegisterByEmailResponse>
     | RegisterByEmailResponse;
+
+  loginByGoogle(
+    request: LoginByGooglePayload,
+    metadata?: Metadata,
+  ):
+    | Promise<LoginByGoogleResponse>
+    | Observable<LoginByGoogleResponse>
+    | LoginByGoogleResponse;
 }
 
 export function AuthServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ['loginByEmail', 'registerByEmail'];
+    const grpcMethods: string[] = [
+      'loginByEmail',
+      'registerByEmail',
+      'loginByGoogle',
+    ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(
         constructor.prototype,

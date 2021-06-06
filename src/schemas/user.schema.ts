@@ -8,8 +8,34 @@ export class User {
   @Prop({ required: true, index: { unique: true } })
   email: string;
 
-  @Prop({ required: true })
-  password: string;
+  // Password can be empty, required for login with google
+  // Password should be validated if loginByEmail is called 
+  @Prop()
+  password?: string; 
+
+  @Prop()
+  googleId?: string;
+
+  @Prop()
+  verifiedEmail?: boolean;
+
+  @Prop()
+  name?: string;
+
+  @Prop()
+  givenName?: string;
+
+  @Prop()
+  familyName?: string;
+
+  @Prop()
+  picture?: string;
+
+  @Prop()
+  locale?: string;
+
+  @Prop()
+  hd?: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
