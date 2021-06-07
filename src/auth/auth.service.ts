@@ -44,4 +44,15 @@ export class AuthService {
 
     return newUser;
   }
+
+  async changePassword(email: string, newPassword: string): Promise<UserDocument> {
+    const user = await this.userModel.findOne({ email });
+    const salt = parseInt(this.config.get('jwt').jwtSaltRounds);
+
+    if (!user) throw new UserNotPresent();
+    const newpassword =  await bcrypt.hash(newPassword, salt);
+    const changed = this.userModel.findByIdAndUpdate(user.id, {password : newpassword });
+
+    return changed;
+  }
 }

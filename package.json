@@ -19,7 +19,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "proto": "protoc --proto_path=proto --experimental_allow_proto3_optional --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_out=./types --ts_proto_opt=nestJs=true --ts_proto_opt=addGrpcMetadata=true --ts_proto_opt=useOptionals=true proto/*.proto"
+    "proto": "protoc --proto_path=proto --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_out=./types --ts_proto_opt=nestJs=true --ts_proto_opt=addGrpcMetadata=true --ts_proto_opt=useOptionals=true proto/*.proto"
   },
   "dependencies": {
     "@grpc/proto-loader": "^0.5.6",
@@ -38,6 +38,7 @@
     "grpc": "^1.24.6",
     "mongoose": "^5.12.3",
     "nestjs-pino": "^1.4.0",
+    "protoc": "^1.0.4",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.6.6"

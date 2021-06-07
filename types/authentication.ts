@@ -31,6 +31,16 @@ export interface RegisterByEmailResponse {
   status: string;
 }
 
+export interface EditPasswordResponse {
+  email: string;
+}
+
+export interface EditPasswordPayload {
+  email: string;
+  password: string;
+  passwordConfirm: string;
+}
+
 export const AUTHENTICATION_PACKAGE_NAME = 'authentication';
 
 export interface UsersServiceClient {
@@ -91,6 +101,11 @@ export interface AuthServiceClient {
     request: RegisterByEmailPayload,
     metadata?: Metadata,
   ): Observable<RegisterByEmailResponse>;
+
+  editPassword(
+    request: EditPasswordPayload,
+    metadata?: Metadata,
+  ): Observable<EditPasswordResponse>;
 }
 
 export interface AuthServiceController {
@@ -109,11 +124,23 @@ export interface AuthServiceController {
     | Promise<RegisterByEmailResponse>
     | Observable<RegisterByEmailResponse>
     | RegisterByEmailResponse;
+
+  editPassword(
+    request: EditPasswordPayload,
+    metadata?: Metadata,
+  ):
+    | Promise<EditPasswordResponse>
+    | Observable<EditPasswordResponse>
+    | EditPasswordResponse;
 }
 
 export function AuthServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ['loginByEmail', 'registerByEmail'];
+    const grpcMethods: string[] = [
+      'loginByEmail',
+      'registerByEmail',
+      'editPassword',
+    ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(
         constructor.prototype,
