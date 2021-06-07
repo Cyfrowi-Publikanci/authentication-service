@@ -8,6 +8,7 @@ import { LoginDto } from '../dto/login';
 
 @Controller()
 export class AuthController implements AuthServiceController {
+
   constructor(
     private readonly authService: AuthService,
     private readonly logger: Logger,
@@ -36,6 +37,7 @@ export class AuthController implements AuthServiceController {
     }));
 
     this.logger.log('New user was created');
+
     return {
       status: 'OK'
     }
