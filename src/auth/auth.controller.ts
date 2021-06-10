@@ -1,8 +1,7 @@
 import { Body, Controller, Inject } from '@nestjs/common';
 import { ClientProxy, GrpcMethod } from '@nestjs/microservices';
 import { Logger } from 'nestjs-pino';
-
-import { AuthServiceController, LoginByEmailResponse, LoginByGooglePayload, LoginByGoogleResponse, RegisterByEmailResponse } from 'types/authentication';
+import { AuthServiceController, EditPasswordPayload, EditPasswordResponse, LoginByEmailResponse, LoginByGooglePayload, LoginByGoogleResponse, RegisterByEmailResponse } from 'types/authentication';
 import { RegisterUserDto } from '../dto/register-user';
 import { AuthService } from './auth.service';
 import { LoginDto } from '../dto/login';
@@ -39,6 +38,23 @@ export class AuthController implements AuthServiceController {
     this.logger.log('New user was created');
     return {
       status: 'OK'
+    }
+  }
+
+
+  @GrpcMethod('AuthService', 'editPassword')
+  async editPassword(any: EditPasswordPayload): Promise<EditPasswordResponse> {
+    console.log(any)
+    const { email, password } = any;
+    const user = await this.authService.changePassword(email, password);
+
+    this.rmqClient.emit('UpdatePassword', JSON.stringify({
+      id: user.id,
+      email: user.email
+    }));
+
+    return {
+      email: 'OK'
     }
   }
 
