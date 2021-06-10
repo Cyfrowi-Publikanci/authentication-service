@@ -11,6 +11,7 @@ service AuthService {
   rpc loginByEmail(LoginByEmailPayload) returns (LoginByEmailResponse) {}
   rpc registerByEmail(RegisterByEmailPayload) returns (RegisterByEmailResponse) {}
   rpc editPassword(EditPasswordPayload) returns (EditPasswordResponse) {}
+  rpc loginByGoogle (LoginByGooglePayload) returns (LoginByGoogleResponse) {}
 }
 
 message EmptyPayload {}
@@ -45,4 +46,12 @@ message EditPasswordResponse {
 message EditPasswordPayload {
   string email = 1;
   string password = 2;
+}
+
+message LoginByGooglePayload {
+  string token = 1;
+}
+
+message LoginByGoogleResponse {
+  string token = 1;
 }

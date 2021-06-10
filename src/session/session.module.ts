@@ -4,8 +4,8 @@ import { JwtModule } from '@nestjs/jwt';
 
 import { SessionController } from './session.controller';
 import { SessionService } from './session.service';
-import { Session, SessionSchema } from 'src/schemas/session.schema';
-import { User, UserSchema } from 'src/schemas/user.schema';
+import { Session, SessionSchema } from '../schemas/session.schema';
+import { User, UserSchema } from '../schemas/user.schema';
 import { ConfigModule, ConfigService } from '@app/config';
 
 @Module({

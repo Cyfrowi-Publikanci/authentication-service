@@ -9,7 +9,7 @@ import { config } from '@app/config/config.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: false,
+    logger: true,
   });
 
   const logger = app.get(Logger);

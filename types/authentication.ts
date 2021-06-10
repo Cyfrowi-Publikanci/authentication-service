@@ -41,6 +41,14 @@ export interface EditPasswordPayload {
   passwordConfirm: string;
 }
 
+export interface LoginByGooglePayload {
+  token: string;
+}
+
+export interface LoginByGoogleResponse {
+  token: string;
+}
+
 export const AUTHENTICATION_PACKAGE_NAME = 'authentication';
 
 export interface UsersServiceClient {
@@ -102,10 +110,16 @@ export interface AuthServiceClient {
     metadata?: Metadata,
   ): Observable<RegisterByEmailResponse>;
 
+
   editPassword(
     request: EditPasswordPayload,
     metadata?: Metadata,
   ): Observable<EditPasswordResponse>;
+
+  loginByGoogle(
+    request: LoginByGooglePayload,
+    metadata?: Metadata,
+  ): Observable<LoginByGoogleResponse>;
 }
 
 export interface AuthServiceController {
@@ -125,6 +139,7 @@ export interface AuthServiceController {
     | Observable<RegisterByEmailResponse>
     | RegisterByEmailResponse;
 
+
   editPassword(
     request: EditPasswordPayload,
     metadata?: Metadata,
@@ -132,6 +147,14 @@ export interface AuthServiceController {
     | Promise<EditPasswordResponse>
     | Observable<EditPasswordResponse>
     | EditPasswordResponse;
+
+  loginByGoogle(
+    request: LoginByGooglePayload,
+    metadata?: Metadata,
+  ):
+    | Promise<LoginByGoogleResponse>
+    | Observable<LoginByGoogleResponse>
+    | LoginByGoogleResponse;
 }
 
 export function AuthServiceControllerMethods() {
@@ -140,6 +163,7 @@ export function AuthServiceControllerMethods() {
       'loginByEmail',
       'registerByEmail',
       'editPassword',
+      'loginByGoogle',
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(

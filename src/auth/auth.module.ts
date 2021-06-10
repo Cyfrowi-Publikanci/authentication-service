@@ -1,11 +1,11 @@
-import { Module } from '@nestjs/common';
+import { HttpModule, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { User, UserSchema } from 'src/schemas/user.schema';
-import { SessionModule } from 'src/session/session.module';
+import { User, UserSchema } from '../schemas/user.schema';
+import { SessionModule } from '../session/session.module';
 import { config, ConfigModule } from '@app/config';
 
 @Module({
@@ -13,6 +13,7 @@ import { config, ConfigModule } from '@app/config';
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     SessionModule,
     ConfigModule,
+    HttpModule,
     ClientsModule.register([
       {
         name: 'RMQ',
