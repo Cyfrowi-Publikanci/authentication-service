@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package settings;
+
+service SettingsService {
+  rpc loadProfile(LoadProfilePayload) returns (LoadProfileResponse) {}
+  rpc changeProfile(ChangeProfilePayload) returns (ChangeProfileResponse) {}
+}
+
+message EmptyPayload {}
+
+message LoadProfileResponse {
+  string preferences = 1;
+  string userid = 2;
+}
+
+message LoadProfilePayload {
+  string userid = 1;
+}
+
+message ChangeProfileResponse {
+  string userid = 2;
+}
+
+message ChangeProfilePayload {
+  string userid = 1;
+  string preferences = 2;
+}

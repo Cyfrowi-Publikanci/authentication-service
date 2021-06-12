@@ -28,11 +28,12 @@ async function bootstrap() {
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.GRPC,
     options: {
-      package: ['envoy.service.auth.v3', 'authentication'],
+      package: ['envoy.service.auth.v3', 'authentication', 'settings'],
       url: `${config().serviceHostname}:${config().servicePort}`,
       protoPath: [
         path.resolve('proto/envoy/service/auth/v3/external_auth.proto'),
         path.resolve('proto/authentication.proto'),
+        path.resolve('proto/settings.proto'),
       ],
       loader: {
         includeDirs: [path.resolve('proto')],

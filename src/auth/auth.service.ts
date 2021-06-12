@@ -7,16 +7,20 @@ import { UserAlreadyExist } from '../errors/user-already-exist';
 import { UserNotPresent } from '../errors/user-not-present';
 import { User, UserDocument } from '../schemas/user.schema';
 import { SessionService } from '../session/session.service';
+import { UserSettings, SettingsDocument, SettingsSchema } from 'src/schemas/settings.schema';
 import { ConfigService } from '@app/config';
 import { IncorrectPassword } from '../errors/incorrect-password';
 import { LoginByGooglePayload } from 'types/authentication';
 import { GooglePayload } from './types';
 import { LoginFailed } from '../errors/login-failed';
+import { Logger } from 'nestjs-pino';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+    @InjectModel(UserSettings.name) private readonly settingsModel: Model<SettingsDocument>,
+    private readonly logger: Logger,
     private readonly sessionService: SessionService,
     private readonly config: ConfigService,
     private readonly httpService: HttpService,
@@ -43,8 +47,8 @@ export class AuthService {
     if (maybeUser) throw new UserAlreadyExist();
 
     const passwordHash = await bcrypt.hash(password, salt);
-    const newUser = await this.userModel.create({ email, password: passwordHash });
-
+    const newUser = await this.userModel.create({ email, password: passwordHash});
+    if (newUser) this.settingsModel.create({userid: newUser.id, preferences: ''}); 
     return newUser;
   }
 

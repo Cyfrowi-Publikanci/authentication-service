@@ -5,6 +5,7 @@ import { AuthServiceController, EditPasswordPayload, EditPasswordResponse, Login
 import { RegisterUserDto } from '../dto/register-user';
 import { AuthService } from './auth.service';
 import { LoginDto } from '../dto/login';
+import { BoolValue } from 'types/google/protobuf/wrappers';
 
 @Controller()
 export class AuthController implements AuthServiceController {
