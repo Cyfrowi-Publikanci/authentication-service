@@ -32,13 +32,12 @@ export interface RegisterByEmailResponse {
 }
 
 export interface EditPasswordResponse {
-  email: string;
+  status: string;
 }
 
 export interface EditPasswordPayload {
   email: string;
   password: string;
-  passwordConfirm: string;
 }
 
 export interface LoginByGooglePayload {
@@ -110,7 +109,6 @@ export interface AuthServiceClient {
     metadata?: Metadata,
   ): Observable<RegisterByEmailResponse>;
 
-
   editPassword(
     request: EditPasswordPayload,
     metadata?: Metadata,
@@ -138,7 +136,6 @@ export interface AuthServiceController {
     | Promise<RegisterByEmailResponse>
     | Observable<RegisterByEmailResponse>
     | RegisterByEmailResponse;
-
 
   editPassword(
     request: EditPasswordPayload,
