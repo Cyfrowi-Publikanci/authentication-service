@@ -33,12 +33,12 @@ export interface RegisterByEmailResponse {
 
 export interface EditPasswordResponse {
   email: string;
+  password: string;
 }
 
 export interface EditPasswordPayload {
   email: string;
   password: string;
-  passwordConfirm: string;
 }
 
 export interface LoginByGooglePayload {
@@ -49,15 +49,15 @@ export interface LoginByGoogleResponse {
   token: string;
 }
 
-export interface BuyPremiumResponse {
-  paymentStatus: string;
-}
-
 export interface BuyPremiumPayload {
   card: string;
   cvc: string;
   month: string;
   year: string;
+}
+
+export interface BuyPremiumResponse {
+  paymentStatus: string;
 }
 
 export const AUTHENTICATION_PACKAGE_NAME = 'authentication';
@@ -121,7 +121,6 @@ export interface AuthServiceClient {
     metadata?: Metadata,
   ): Observable<RegisterByEmailResponse>;
 
-
   editPassword(
     request: EditPasswordPayload,
     metadata?: Metadata,
@@ -131,6 +130,11 @@ export interface AuthServiceClient {
     request: LoginByGooglePayload,
     metadata?: Metadata,
   ): Observable<LoginByGoogleResponse>;
+
+  buyPremium(
+    request: BuyPremiumPayload,
+    metadata?: Metadata,
+  ): Observable<BuyPremiumResponse>;
 }
 
 export interface AuthServiceController {
@@ -150,7 +154,6 @@ export interface AuthServiceController {
     | Observable<RegisterByEmailResponse>
     | RegisterByEmailResponse;
 
-
   editPassword(
     request: EditPasswordPayload,
     metadata?: Metadata,
@@ -166,6 +169,14 @@ export interface AuthServiceController {
     | Promise<LoginByGoogleResponse>
     | Observable<LoginByGoogleResponse>
     | LoginByGoogleResponse;
+
+  buyPremium(
+    request: BuyPremiumPayload,
+    metadata?: Metadata,
+  ):
+    | Promise<BuyPremiumResponse>
+    | Observable<BuyPremiumResponse>
+    | BuyPremiumResponse;
 }
 
 export function AuthServiceControllerMethods() {
@@ -175,6 +186,7 @@ export function AuthServiceControllerMethods() {
       'registerByEmail',
       'editPassword',
       'loginByGoogle',
+      'buyPremium',
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(
