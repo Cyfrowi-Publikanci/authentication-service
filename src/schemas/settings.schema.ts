@@ -10,6 +10,9 @@ export class UserSettings {
 
   @Prop({ required: false })
   preferences: string;
+
+  @Prop({ required: false })
+  waschanged: boolean;
 }
 
 export const SettingsSchema = SchemaFactory.createForClass(UserSettings);

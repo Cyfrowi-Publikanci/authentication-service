@@ -4,15 +4,24 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 
 import { settingsService } from './settings.service';
 import { SettingsController } from './settings.controller';
-import { UserSettings, SettingsSchema } from 'src/schemas/settings.schema';
-import { SessionModule } from 'src/session/session.module';
-import { config, ConfigModule } from '@app/config';
+import { UserSettings, SettingsSchema } from '../schemas/settings.schema';
+import { SessionModule } from '../session/session.module';
+import { config, ConfigModule, ConfigService } from '@app/config';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: UserSettings.name, schema: SettingsSchema }]),
     SessionModule,
     ConfigModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({ 
+        secret: configService.get('jwt').jwtSalt,
+        signOptions: { algorithm: 'HS256' }
+      }),
+      inject: [ConfigService],
+    }),
     ClientsModule.register([
       {
         name: 'RMQ',

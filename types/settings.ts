@@ -12,6 +12,7 @@ export interface EmptyPayload {}
 export interface LoadProfileResponse {
   preferences: string;
   userid: string;
+  waschanged: boolean;
 }
 
 export interface LoadProfilePayload {
@@ -19,12 +20,13 @@ export interface LoadProfilePayload {
 }
 
 export interface ChangeProfileResponse {
-  userid: string;
+  status: string;
 }
 
 export interface ChangeProfilePayload {
   userid: string;
   preferences: string;
+  waschanged: boolean;
 }
 
 export const SETTINGS_PACKAGE_NAME = 'settings';

@@ -7,7 +7,7 @@ import { UserAlreadyExist } from '../errors/user-already-exist';
 import { UserNotPresent } from '../errors/user-not-present';
 import { User, UserDocument } from '../schemas/user.schema';
 import { SessionService } from '../session/session.service';
-import { UserSettings, SettingsDocument, SettingsSchema } from 'src/schemas/settings.schema';
+import { UserSettings, SettingsDocument } from '../schemas/settings.schema';
 import { ConfigService } from '@app/config';
 import { IncorrectPassword } from '../errors/incorrect-password';
 import { LoginByGooglePayload } from 'types/authentication';
@@ -48,7 +48,7 @@ export class AuthService {
 
     const passwordHash = await bcrypt.hash(password, salt);
     const newUser = await this.userModel.create({ email, password: passwordHash});
-    if (newUser) this.settingsModel.create({userid: newUser.id, preferences: ''}); 
+    if (newUser) this.settingsModel.create({userid: newUser.id, preferences: '', waschanged: false}); 
     return newUser;
   }
 

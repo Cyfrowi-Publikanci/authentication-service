@@ -34,7 +34,6 @@ export interface RegisterByEmailResponse {
 
 export interface EditPasswordResponse {
   status: string;
-  password: string;
 }
 
 export interface EditPasswordPayload {
