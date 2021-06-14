@@ -12,6 +12,7 @@ service AuthService {
   rpc registerByEmail(RegisterByEmailPayload) returns (RegisterByEmailResponse) {}
   rpc editPassword(EditPasswordPayload) returns (EditPasswordResponse) {}
   rpc loginByGoogle (LoginByGooglePayload) returns (LoginByGoogleResponse) {}
+  rpc buyPremium (BuyPremiumPayload) returns (BuyPremiumResponse) {}
 }
 
 message EmptyPayload {}
@@ -54,4 +55,15 @@ message LoginByGooglePayload {
 
 message LoginByGoogleResponse {
   string token = 1;
+}
+
+message BuyPremiumPayload {
+  string card = 1;
+  string cvc = 2;
+  string month = 3;
+  string year = 4;
+}
+
+message BuyPremiumResponse {
+  string paymentStatus = 1;
 }

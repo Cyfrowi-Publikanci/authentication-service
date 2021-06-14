@@ -9,9 +9,11 @@ import { User, UserDocument } from '../schemas/user.schema';
 import { SessionService } from '../session/session.service';
 import { ConfigService } from '@app/config';
 import { IncorrectPassword } from '../errors/incorrect-password';
-import { LoginByGooglePayload } from 'types/authentication';
+import { LoginByGooglePayload, BuyPremiumPayload } from 'types/authentication';
 import { GooglePayload } from './types';
 import { LoginFailed } from '../errors/login-failed';
+import { InjectStripe } from 'nestjs-stripe';
+import Stripe from 'stripe';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +22,7 @@ export class AuthService {
     private readonly sessionService: SessionService,
     private readonly config: ConfigService,
     private readonly httpService: HttpService,
+    @InjectStripe() private readonly stripeClient: Stripe,
   ) {}
 
   async login(email: string, password: string): Promise<string> {
@@ -82,5 +85,56 @@ export class AuthService {
     } catch (error) {
       throw new LoginFailed();
     }
+  }
+
+  async buyPremium(payload: BuyPremiumPayload, userId: string): Promise<string> {
+    
+
+    //get user
+    const changed = await this.userModel.findById(userId);
+    if (!changed) throw new UserNotPresent()
+    if (changed.premium) {
+      return "Premium is active"
+    }
+    //sprawdzic czy ma premium
+
+    const card = await this.stripeClient.tokens.create({
+      card: {
+        number: payload.card,
+        exp_month: payload.month,
+        exp_year: payload.year,
+        cvc: payload.cvc,
+      },
+    });
+
+    if (!card){
+      return 'bad card deatails'
+    }
+
+
+    const customer = await this.stripeClient.customers.create({
+      description: 'email',//get email
+    });
+
+    const paymentInfo = await this.stripeClient.customers.createSource(
+      customer.id,
+      { source: card.id },
+    );
+
+    const paymentIntent = await this.stripeClient.paymentIntents.create({
+      amount: 1000,
+      currency: 'pln',
+      customer: customer.id,
+    });
+    const conf = await this.stripeClient.paymentIntents.confirm(paymentIntent.id, {
+      payment_method: paymentInfo.id,
+    });
+
+    if (!conf) {
+      return "Payment errror"
+    }
+    await this.userModel.findByIdAndUpdate(userId, {premium : true });
+
+    return 'ok';
   }
 }

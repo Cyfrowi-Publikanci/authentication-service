@@ -1,17 +1,21 @@
 import { Body, Controller, Inject } from '@nestjs/common';
 import { ClientProxy, GrpcMethod } from '@nestjs/microservices';
 import { Logger } from 'nestjs-pino';
-import { AuthServiceController, EditPasswordPayload, EditPasswordResponse, LoginByEmailResponse, LoginByGooglePayload, LoginByGoogleResponse, RegisterByEmailResponse } from 'types/authentication';
+import { AuthServiceController, BuyPremiumPayload, BuyPremiumResponse, EditPasswordPayload, EditPasswordResponse, LoginByEmailResponse, LoginByGooglePayload, LoginByGoogleResponse, RegisterByEmailResponse } from 'types/authentication';
 import { RegisterUserDto } from '../dto/register-user';
 import { AuthService } from './auth.service';
 import { LoginDto } from '../dto/login';
+import { Metadata } from 'grpc';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller()
 export class AuthController implements AuthServiceController {
   constructor(
     private readonly authService: AuthService,
     private readonly logger: Logger,
-    @Inject('RMQ') private readonly rmqClient: ClientProxy
+    @Inject('RMQ') private readonly rmqClient: ClientProxy,
+    private readonly jwtService: JwtService
+
   ){}
 
   @GrpcMethod('AuthService', 'loginByEmail')
@@ -66,5 +70,27 @@ export class AuthController implements AuthServiceController {
     return {
       token
     }
+  }
+
+  @GrpcMethod('AuthService', 'buyPremium')
+  async buyPremium(payload: BuyPremiumPayload, metadata: Metadata): Promise<BuyPremiumResponse> {
+
+    
+
+    const authorization = metadata.get('authorization')[0] as string;
+    const [, token] = authorization.split('Bearer ');
+    const {​​​​​​​​ usr }​​​​​​​​ = this.jwtService.decode(token) as
+    {
+    usr: string;
+    iat: number;
+    exp: number;
+    };
+
+
+    const paymentStatus = await this.authService.buyPremium(payload, usr);
+    return {
+      paymentStatus
+    }
+  
   }
 }

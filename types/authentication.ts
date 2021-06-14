@@ -49,6 +49,17 @@ export interface LoginByGoogleResponse {
   token: string;
 }
 
+export interface BuyPremiumResponse {
+  paymentStatus: string;
+}
+
+export interface BuyPremiumPayload {
+  card: string;
+  cvc: string;
+  month: string;
+  year: string;
+}
+
 export const AUTHENTICATION_PACKAGE_NAME = 'authentication';
 
 export interface UsersServiceClient {

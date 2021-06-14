@@ -13,6 +13,9 @@ export class User {
   @Prop()
   password?: string; 
 
+  @Prop({type: Boolean, default: false})
+  premium?: boolean
+
   @Prop()
   googleId?: string;
 
