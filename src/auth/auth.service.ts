@@ -89,14 +89,15 @@ export class AuthService {
 
   async buyPremium(payload: BuyPremiumPayload, userId: string): Promise<string> {
     
-
+    //return "elo";
     //get user
-    const changed = await this.userModel.findById(userId);
-    if (!changed) throw new UserNotPresent()
-    if (changed.premium) {
-      return "Premium is active"
-    }
+    // const changed = await this.userModel.findById(userId);
+    // if (!changed) throw new UserNotPresent()
+    // if (changed.premium) {
+    //   return "Premium is active"
+    // }
     //sprawdzic czy ma premium
+
 
     const card = await this.stripeClient.tokens.create({
       card: {
@@ -113,7 +114,7 @@ export class AuthService {
 
 
     const customer = await this.stripeClient.customers.create({
-      description: 'email',//get email
+      description: "elo",//changed.email
     });
 
     const paymentInfo = await this.stripeClient.customers.createSource(
@@ -133,7 +134,7 @@ export class AuthService {
     if (!conf) {
       return "Payment errror"
     }
-    await this.userModel.findByIdAndUpdate(userId, {premium : true });
+    //await this.userModel.findByIdAndUpdate(userId, {premium : true });
 
     return 'ok';
   }

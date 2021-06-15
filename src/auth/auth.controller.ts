@@ -47,18 +47,12 @@ export class AuthController implements AuthServiceController {
 
 
   @GrpcMethod('AuthService', 'editPassword')
-  async editPassword(any: EditPasswordPayload): Promise<EditPasswordResponse> {
-    console.log(any)
-    const { email, password } = any;
-    const user = await this.authService.changePassword(email, password);
-
-    this.rmqClient.emit('UpdatePassword', JSON.stringify({
-      id: user.id,
-      email: user.email
-    }));
+  async editPassword(payload: EditPasswordPayload): Promise<EditPasswordResponse> {
+    const { email, password } = payload;
+    await this.authService.changePassword(email, password);
 
     return {
-      email: 'OK'
+      status: 'OK'
     }
   }
 
@@ -72,22 +66,21 @@ export class AuthController implements AuthServiceController {
     }
   }
 
+
   @GrpcMethod('AuthService', 'buyPremium')
   async buyPremium(payload: BuyPremiumPayload, metadata: Metadata): Promise<BuyPremiumResponse> {
-
-    
-
-    const authorization = metadata.get('authorization')[0] as string;
-    const [, token] = authorization.split('Bearer ');
-    const {​​​​​​​​ usr }​​​​​​​​ = this.jwtService.decode(token) as
-    {
-    usr: string;
-    iat: number;
-    exp: number;
-    };
+  
+    // const authorization = metadata.get('authorization')[0] as string;
+    // const [, token] = authorization.split('Bearer ');
+    // const {​​​​​​​​ usr }​​​​​​​​ = this.jwtService.decode(token) as
+    // {
+    // usr: string;
+    // iat: number;
+    // exp: number;
+    // };
 
 
-    const paymentStatus = await this.authService.buyPremium(payload, usr);
+    const paymentStatus = await this.authService.buyPremium(payload, "usr");
     return {
       paymentStatus
     }

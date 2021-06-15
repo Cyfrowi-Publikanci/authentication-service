@@ -42,7 +42,8 @@
     "protoc": "^1.0.4",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^6.6.6"
+    "rxjs": "^6.6.6",
+    "stripe": "^8.154.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.6.0",
