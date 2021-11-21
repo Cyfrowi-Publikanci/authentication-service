@@ -47,8 +47,8 @@ export class AuthService {
     if (maybeUser) throw new UserAlreadyExist();
 
     const passwordHash = await bcrypt.hash(password, salt);
-    const newUser = await this.userModel.create({ email, password: passwordHash});
-    if (newUser) this.settingsModel.create({userid: newUser.id, preferences: '', waschanged: false}); 
+    const newUser = await this.userModel.create({ email, password: passwordHash });
+    if (newUser) this.settingsModel.create({ userid: newUser.id, bgColor: 'blue', fontSize: '12px', waschanged: false }); 
     return newUser;
   }
 

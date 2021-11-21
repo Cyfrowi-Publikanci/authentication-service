@@ -9,7 +9,10 @@ export class UserSettings {
   userid: string;
 
   @Prop({ required: false })
-  preferences: string;
+  bgColor: string;
+
+  @Prop({ required: false })
+  fontSize: string;
 
   @Prop({ required: false })
   waschanged: boolean;

@@ -10,8 +10,8 @@ export const protobufPackage = 'settings';
 export interface EmptyPayload {}
 
 export interface LoadProfileResponse {
-  preferences: string;
-  userid: string;
+  bgColor: string;
+  fontSize: string;
   waschanged: boolean;
 }
 
@@ -24,8 +24,8 @@ export interface ChangeProfileResponse {
 }
 
 export interface ChangeProfilePayload {
-  userid: string;
-  preferences: string;
+  bgColor: string;
+  fontSize: string;
   waschanged: boolean;
 }
 
