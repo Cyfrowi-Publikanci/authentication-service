@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Logger } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 
 import { InvalidToken } from '../errors/invalid-token';
@@ -8,12 +8,15 @@ import { SessionService } from './session.service';
 @Controller()
 export class SessionController implements AuthorizationController {
   constructor(
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly logger: Logger,
   ){}
 
   @GrpcMethod('Authorization', 'Check')
   async check(request: CheckRequest): Promise<CheckResponse> {
-    
+
+    this.logger.log('LB test');
+
     if (typeof request?.attributes?.request?.http?.headers?.authorization !== 'string') {
       throw new InvalidToken();
     }
