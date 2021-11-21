@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package settings;
+
+service SettingsService {
+  rpc loadProfile(LoadProfilePayload) returns (LoadProfileResponse) {}
+  rpc changeProfile(ChangeProfilePayload) returns (ChangeProfileResponse) {}
+}
+
+message EmptyPayload {}
+
+message LoadProfileResponse {
+  string bgColor = 1;
+  string fontSize = 2;
+  bool waschanged = 3;
+}
+
+message LoadProfilePayload {
+  string userid = 1;
+}
+
+message ChangeProfileResponse {
+  string status = 1;
+}
+
+message ChangeProfilePayload {
+  string bgColor = 1;
+  string fontSize = 2;
+  bool waschanged = 3;
+}

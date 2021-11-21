@@ -25,6 +25,7 @@ export interface LoginByEmailResponse {
 export interface RegisterByEmailPayload {
   email: string;
   password: string;
+  preferences: string;
 }
 
 export interface RegisterByEmailResponse {

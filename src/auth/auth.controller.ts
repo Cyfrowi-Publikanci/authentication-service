@@ -5,9 +5,11 @@ import { AuthServiceController, EditPasswordPayload, EditPasswordResponse, Login
 import { RegisterUserDto } from '../dto/register-user';
 import { AuthService } from './auth.service';
 import { LoginDto } from '../dto/login';
+import { BoolValue } from 'types/google/protobuf/wrappers';
 
 @Controller()
 export class AuthController implements AuthServiceController {
+
   constructor(
     private readonly authService: AuthService,
     private readonly logger: Logger,
@@ -36,6 +38,7 @@ export class AuthController implements AuthServiceController {
     }));
 
     this.logger.log('New user was created');
+
     return {
       status: 'OK'
     }

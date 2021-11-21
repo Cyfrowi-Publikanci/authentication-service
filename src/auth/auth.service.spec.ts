@@ -13,6 +13,7 @@ import { SessionModule } from '../session/session.module';
 import { UserNotPresent } from '../errors/user-not-present';
 import { IncorrectPassword } from '../errors/incorrect-password';
 import { SessionService } from '../session/session.service';
+import { UserSettings } from '../schemas/settings.schema';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -28,6 +29,20 @@ describe('AuthService', () => {
   const sessionModelMock = class {};
 
   const userModelMock = class {
+    static save = jest.fn();
+
+    static findOne = jest.fn();
+
+    static findOneAndUpdate = jest.fn();
+
+    static findById = jest.fn();
+
+    static markModified = jest.fn();
+
+    static createCollection = jest.fn();
+  };
+
+  const settingsModelMock = class {
     static save = jest.fn();
 
     static findOne = jest.fn();
@@ -65,12 +80,18 @@ describe('AuthService', () => {
           provide: getModelToken(User.name),
           useValue: userModelMock,
         },
+        {
+          provide: getModelToken(UserSettings.name),
+          useValue: settingsModelMock,
+        },
       ]
     })
       .overrideProvider(getModelToken(Session.name))
       .useValue(sessionModelMock)
       .overrideProvider(getModelToken(User.name))
       .useValue(userModelMock)
+      .overrideProvider(getModelToken(UserSettings.name))
+      .useValue(settingsModelMock)
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
       .overrideProvider(SessionService)

@@ -1,21 +1,27 @@
-import { HttpModule, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
-import { AuthService } from './auth.service';
-import { AuthController } from './auth.controller';
-import { User, UserSchema } from '../schemas/user.schema';
+import { settingsService } from './settings.service';
+import { SettingsController } from './settings.controller';
 import { UserSettings, SettingsSchema } from '../schemas/settings.schema';
 import { SessionModule } from '../session/session.module';
-import { config, ConfigModule } from '@app/config';
+import { config, ConfigModule, ConfigService } from '@app/config';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     MongooseModule.forFeature([{ name: UserSettings.name, schema: SettingsSchema }]),
     SessionModule,
     ConfigModule,
-    HttpModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({ 
+        secret: configService.get('jwt').jwtSalt,
+        signOptions: { algorithm: 'HS256' }
+      }),
+      inject: [ConfigService],
+    }),
     ClientsModule.register([
       {
         name: 'RMQ',
@@ -30,7 +36,7 @@ import { config, ConfigModule } from '@app/config';
       },
     ]),
   ],
-  providers: [AuthService],
-  controllers: [AuthController]
+  providers: [settingsService],
+  controllers: [SettingsController]
 })
-export class AuthModule {}
+export class SettingsModule {}

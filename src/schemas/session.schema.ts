@@ -2,6 +2,7 @@ import { Document, Schema as MongooseSchema, Types } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 import { User } from './user.schema';
+import { UserSettings } from './settings.schema';
 
 export type SessionDocument = Session & Document;
 
@@ -19,6 +20,12 @@ export class Session {
   @Prop({
     default: null,
   })
+
+  @Prop({ 
+    type: Types.ObjectId, 
+    ref: UserSettings.name })
+  settings?: UserSettings;
+
   expiresAt: Date;
 }
 

@@ -36,6 +36,10 @@ export class User {
 
   @Prop()
   hd?: string;
+
+  @Prop({ required: false })
+  preferences: string;
+
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

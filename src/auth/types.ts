@@ -37,6 +37,7 @@ export namespace GooglePayload {
       picture: payload.picture,
       locale: payload.locale,
       hd: payload.hd,
+      preferences: '',
     };
   }
 }
