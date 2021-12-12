@@ -12,6 +12,7 @@ service AuthService {
   rpc registerByEmail(RegisterByEmailPayload) returns (RegisterByEmailResponse) {}
   rpc editPassword(EditPasswordPayload) returns (EditPasswordResponse) {}
   rpc loginByGoogle (LoginByGooglePayload) returns (LoginByGoogleResponse) {}
+  rpc getAllNotifications(EmptyPayload) returns (GetAllNotyficationsResponse) {}
 }
 
 message EmptyPayload {}
@@ -54,4 +55,8 @@ message LoginByGooglePayload {
 
 message LoginByGoogleResponse {
   string token = 1;
+}
+
+message GetAllNotyficationsResponse {
+  repeated string notyfications = 1;
 }

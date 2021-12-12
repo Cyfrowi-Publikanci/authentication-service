@@ -40,6 +40,8 @@ export class User {
   @Prop({ required: false })
   preferences: string;
 
+  @Prop()
+  notifications: [string];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

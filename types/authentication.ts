@@ -49,6 +49,10 @@ export interface LoginByGoogleResponse {
   token: string;
 }
 
+export interface GetAllNotyficationsResponse {
+  notyfications: string[];
+}
+
 export const AUTHENTICATION_PACKAGE_NAME = 'authentication';
 
 export interface UsersServiceClient {
@@ -119,6 +123,11 @@ export interface AuthServiceClient {
     request: LoginByGooglePayload,
     metadata?: Metadata,
   ): Observable<LoginByGoogleResponse>;
+
+  getAllNotifications(
+    request: EmptyPayload,
+    metadata?: Metadata,
+  ): Observable<GetAllNotyficationsResponse>;
 }
 
 export interface AuthServiceController {
@@ -153,6 +162,14 @@ export interface AuthServiceController {
     | Promise<LoginByGoogleResponse>
     | Observable<LoginByGoogleResponse>
     | LoginByGoogleResponse;
+
+  getAllNotifications(
+    request: EmptyPayload,
+    metadata?: Metadata,
+  ):
+    | Promise<GetAllNotyficationsResponse>
+    | Observable<GetAllNotyficationsResponse>
+    | GetAllNotyficationsResponse;
 }
 
 export function AuthServiceControllerMethods() {
@@ -162,6 +179,7 @@ export function AuthServiceControllerMethods() {
       'registerByEmail',
       'editPassword',
       'loginByGoogle',
+      'getAllNotifications',
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(

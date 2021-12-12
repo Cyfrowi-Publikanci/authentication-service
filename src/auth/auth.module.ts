@@ -7,7 +7,8 @@ import { AuthController } from './auth.controller';
 import { User, UserSchema } from '../schemas/user.schema';
 import { UserSettings, SettingsSchema } from '../schemas/settings.schema';
 import { SessionModule } from '../session/session.module';
-import { config, ConfigModule } from '@app/config';
+import { JwtModule } from '@nestjs/jwt';
+import { config, ConfigModule, ConfigService } from '@app/config';
 
 @Module({
   imports: [
@@ -16,6 +17,14 @@ import { config, ConfigModule } from '@app/config';
     SessionModule,
     ConfigModule,
     HttpModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({ 
+        secret: configService.get('jwt').jwtSalt,
+        signOptions: { algorithm: 'HS256' }
+      }),
+      inject: [ConfigService],
+    }),
     ClientsModule.register([
       {
         name: 'RMQ',

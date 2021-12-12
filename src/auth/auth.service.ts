@@ -87,4 +87,11 @@ export class AuthService {
       throw new LoginFailed();
     }
   }
+
+  async loadUser(userid: string): Promise<UserDocument> {
+    const user = await this.userModel.findById(userid);
+    if (!user) throw new UserNotPresent();
+
+    return user;
+  }
 }

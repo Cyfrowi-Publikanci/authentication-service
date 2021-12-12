@@ -38,6 +38,7 @@ export namespace GooglePayload {
       locale: payload.locale,
       hd: payload.hd,
       preferences: '',
+      notifications: ['']
     };
   }
 }

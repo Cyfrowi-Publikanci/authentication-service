@@ -1,11 +1,12 @@
 import { Body, Controller, Inject } from '@nestjs/common';
 import { ClientProxy, GrpcMethod } from '@nestjs/microservices';
 import { Logger } from 'nestjs-pino';
-import { AuthServiceController, EditPasswordPayload, EditPasswordResponse, LoginByEmailResponse, LoginByGooglePayload, LoginByGoogleResponse, RegisterByEmailResponse } from 'types/authentication';
+import { AuthServiceController, EditPasswordPayload, EditPasswordResponse, EmptyPayload, GetAllNotyficationsResponse, LoginByEmailResponse, LoginByGooglePayload, LoginByGoogleResponse, RegisterByEmailResponse } from 'types/authentication';
 import { RegisterUserDto } from '../dto/register-user';
 import { AuthService } from './auth.service';
 import { LoginDto } from '../dto/login';
-import { BoolValue } from 'types/google/protobuf/wrappers';
+import { Metadata } from 'grpc';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller()
 export class AuthController implements AuthServiceController {
@@ -13,7 +14,8 @@ export class AuthController implements AuthServiceController {
   constructor(
     private readonly authService: AuthService,
     private readonly logger: Logger,
-    @Inject('RMQ') private readonly rmqClient: ClientProxy
+    @Inject('RMQ') private readonly rmqClient: ClientProxy,
+    @Inject(JwtService) private readonly jwtService: JwtService
   ){}
 
   @GrpcMethod('AuthService', 'loginByEmail')
@@ -62,6 +64,29 @@ export class AuthController implements AuthServiceController {
     const token = await this.authService.loginByGoogle(payload);
     return {
       token
+    }
+  }
+
+  @GrpcMethod('AuthService', 'getAllNotifications')
+  async getAllNotifications(_request: EmptyPayload, metadata: Metadata): Promise<GetAllNotyficationsResponse> {
+    const authorization = metadata.get('authorization')[0] as string;
+    const [, token] = authorization.split('Bearer ');
+    const { usr } = this.jwtService.decode(token) as {
+      usr: string;
+      iat: number;
+      exp: number;
+      };
+    
+    const user = await this.authService.loadUser(usr);
+    
+    var notifications: [string]
+
+    if (user && user.notifications) {
+      notifications = user.notifications
+    }
+
+    return {
+      notyfications: notifications
     }
   }
 }
