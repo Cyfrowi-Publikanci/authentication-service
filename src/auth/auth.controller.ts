@@ -34,10 +34,10 @@ export class AuthController implements AuthServiceController {
     
     const user = await this.authService.createAccount(email, password);
 
-    this.rmqClient.emit('createUser', JSON.stringify({
-      id: user.id,
-      email: user.email
-    }));
+    // this.rmqClient.emit('createUser', JSON.stringify({
+    //   id: user.id,
+    //   email: user.email
+    // }));
 
     this.logger.log('New user was created');
 

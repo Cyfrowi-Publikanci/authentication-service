@@ -1,9 +1,10 @@
-import { Controller } from '@nestjs/common';
+import { Controller, UseGuards } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 
 import { InvalidToken } from '../errors/invalid-token';
 import { AuthorizationController, CheckRequest, CheckResponse } from 'types/envoy/service/auth/v3/external_auth';
 import { SessionService } from './session.service';
+import { AdminsGuard } from 'src/guards/roles.guard';
 
 @Controller()
 export class SessionController implements AuthorizationController {
@@ -11,6 +12,7 @@ export class SessionController implements AuthorizationController {
     private readonly sessionService: SessionService,
   ){}
 
+  @UseGuards(AdminsGuard)
   @GrpcMethod('Authorization', 'Check')
   async check(request: CheckRequest): Promise<CheckResponse> {
 

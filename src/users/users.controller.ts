@@ -10,7 +10,6 @@ export class UsersController implements UsersServiceController {
   constructor(
     private readonly usersService: UsersService
   ){}
-  
   @GrpcMethod('UsersService', 'getAllUsers')
   async getAllUsers(): Promise<GetAllUsersResponse> {
     const response = await this.usersService.getAllUsers();

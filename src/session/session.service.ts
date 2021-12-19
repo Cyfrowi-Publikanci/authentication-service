@@ -63,4 +63,24 @@ export class SessionService {
 
     return userId;
   }
+
+  async authorizeAdmin(token: string): Promise<User> {
+    if (!token) {
+      throw new InvalidToken();
+    }
+
+    const isValid = this.jwtService.verify(token);
+
+    if (!isValid) throw new InvalidToken();
+
+    const { usr: administratorId } = isValid;
+
+    const administrator = await this.userModel.findById(administratorId);
+
+    if (!administrator || administrator.role != 'admin') {
+      throw new InvalidToken();
+    }
+
+    return administrator;
+  }
 }
